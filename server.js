@@ -13,7 +13,7 @@ const openai = new OpenAIApi(configuration);
 app.post("/debug", async function (req, res) {
     const { code, language } = req.body;
     try {
-        const response = await openai.createChatCompletion({
+        const response = await openai.chat.completions.create({
             model: 'gpt-4',
             messages: [
                 {
@@ -27,11 +27,13 @@ app.post("/debug", async function (req, res) {
             ]
         });
         const result = response.data.choices[0].message.content;
-        res.send({ result });
+        res.json({ result });
     } catch (err) {
         console.error(err);
-        res.status(500).send({ error: 'Failed to generate debug output' });
+        res.statusCode(500).json({
+            error: "Something went wrong"
+        })
     }
-});
+})
 
 app.listen(8000, () => console.log("server starting at http://localhost:8000"));
