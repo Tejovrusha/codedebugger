@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const { Configuration, OpenAIApi } = require('openai');
 
 const app = express();
@@ -10,7 +11,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-app.post("/debug", async function (req, res) {
+app.post("/debug", (req, res)=>{
     const { code, language } = req.body;
     try {
         const response = await openai.chat.completions.create({
@@ -26,7 +27,7 @@ app.post("/debug", async function (req, res) {
                 }
             ]
         });
-        const result = response.data.choices[0].message.content;
+        const result = response.choices[0].message.content;
         res.json({ result });
     } catch (err) {
         console.error(err);
@@ -36,4 +37,4 @@ app.post("/debug", async function (req, res) {
     }
 })
 
-app.listen(8000, () => console.log("server starting at http://localhost:8000"));
+app.listen(8000, () => console.log("server starting on port 8000"));
